@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+
+</head>
+
+<body>
+
+    <h1>Admin Dashboard</h1>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Menu</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{url_for("add_book")}}">Add Book</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{url_for("add_section")}}">Add Section</a>
+                    </li>
+                </ul>
+            </div>
+            <form class="d-flex" role="search">
+              <a href="{{url_for("updaterating")}}"><button class="btn btn-success"
+                      type="button">Updaterating</button></a>
+          </form>
+
+
+            <form class="d-flex" role="search">
+              &nbsp &nbsp <a href="{{url_for("logoutAdmin")}}"><button class="btn btn-outline-danger"
+                        type="button">Logout</button></a>
+            </form>
+        </div>
+        
+    </nav>
+
+<div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+       <h5> Book Management </h5>
+      </button>
+    </h2>
+  <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+    <div class="accordion-body"> 
+				{% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <p class="flash_message">{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+			<table class="table">
+          <tr>
+              <th scope="col">Book Id</th>
+              <th scope="col">Book Title</th>
+              <th scope="col">Author First Name</th>
+              <th scope="col">Publisher</th>
+              <th scope="col">Available copies</th>
+              <th scope="col">Rating</th>
+              <th scope="col">Book Wrapper</th>
+              <th scope="col">Action</th>
+            </tr> 
+					{% for book in books %}
+            <tr>
+              <td scope="row">{{ book.book_id }}</td>
+              <td>{{ book.title }}</td>
+              <td>{{ book.authorfname }}</td>
+              <td>{{ book.publisher }}</td>
+              <td>{{ book.copies }}</td>
+              <td>{{ book.rating }}</td>
+              <td><a href="{{url_for("display_book", book_id = book.book_id)}}" >view</a></td>
+              <td><a href="{{url_for("edit_book", book_id = book.book_id)}}"><i class="bi bi-pencil-square"></i></a></td>
+              <td><a href="{{url_for("dlt_book", book_id = book.book_id)}}"><i class="bi bi-trash-fill"></i></a></td>
+            </tr>
+            {% endfor %}
+			</table>
+			  <div> <a  href="{{url_for("add_book")}}">Add Book</a>	</div>
+					
+		</div>
+  </div>
+  
+</div>
+
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+       <h5> Section Management </h5>
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body"> 
+				{% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <p class="flash_message">{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+			<table class="table">
+                <tr>
+                    <th scope="col">Section Id</th>
+                    <th scope="col">Section Name</th>
+                    <th scope="col">Date of Creation</th>
+                    <th scope="col">Description</th>
+                </tr>
+                {% for section in sections %}
+                    <tr>
+                        <td scope="row">{{ section.section_id }}</td>
+                        <td>{{ section.name }}</td>
+                        <td>{{ section.date_created }}</td>
+                        <td>{{ section.description }}</td>
+                        <td><a href="{{url_for("edit_section", section_id = section.section_id)}}"><i class="bi bi-pencil-square"></i></a></td>    
+                        <td><a href="{{url_for("dlt_section", section_id = section.section_id)}}"><i class="bi bi-trash-fill"></i></a></td>
+                        </tr>
+                        {% endfor %}
+			</table>
+			  <div> <a  href="{{url_for("add_section")}}">Add Section</a>	</div>
+					
+		  </div>
+  </div>
+</div>
+  
+  
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+       <h5>Book Search and Status</h5> 
+      </button>
+    </h2>
+   
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body"></div>
+      <div class="accordion-body"><form method="post" enctype="multipart/form-data" >
+
+        <div>
+          <h5>Book Search</h5>
+          <label>Text to be searched in Book Catalogue:</label>
+          <input type="text" name="text" required/>
+        </div></br>
+            
+        <input type="radio" name="heading" value="title" />
+        <label>Book Title</label>
+        <input type="radio" name="heading" value="authorfname" />
+        <label>Author First Name</label>
+        <input type="radio" name="heading" value="publisher" />
+        <label>Publisher Name</label>
+        <input type="radio" name="heading" value="section" />
+        <label>Section</label>
+          
+        <div>
+          <input type="submit" value = "Search"> 
+        </div>
+        </form>
+    </div>	
+        <div>
+          {% if data %}
+          <table class="table">
+            <tr>
+              <th scope="col">Book Id</th>
+              <th scope="col">Book Title</th>
+              <th scope="col">Author First Name</th>
+              <th scope="col">Publisher</th>
+              <th scope="col">Rating</th>
+              <th scope="col">Book Wrapper</th>
+              <th scope="col">Action</th>
+          </tr>
+          {% for record in data %}
+          <tr>
+            <td scope="row">{{ record.book_id }}</td>
+            <td>{{ record.title }}</td>
+            <td>{{ record.authorfname }}</td>
+            <td>{{ record.publisher }}</td>
+            <td>{{ record.rating }}</td>
+            <td><a href="../{{record.book_img_path}}" target="_blank">view</a></td>
+            <td><a href="{{url_for("edit_book", book_id = record.book_id)}}"><i class="bi bi-pencil-square"></i></a></td>
+            <td><a href="{{url_for("dlt_book", book_id = record.book_id)}}"><i class="bi bi-trash-fill"></i></a></td>
+        </tr>
+            {% endfor %}
+</table>
+        {% else %}
+         <p>No record is found</p> 
+          {% endif %}
+          
+        </div>
+      <div class="accordion-body"><form method="post" enctype="multipart/form-data" >
+
+        <div>
+          <label>Text to be searched in Section:</label>
+          <input type="text" name="stext" required/>
+        </div></br>
+            
+        <input type="radio" name="sheading" value="name" />
+        <label>Name</label>
+        <input type="radio" name="sheading" value="description" />
+        <label>Description</label>
+        
+          
+        <div>
+          <input type="submit" value = "Search"> 
+        </div>
+        </form>
+    </div>	
+        <div>
+          {% if sdata %}
+          <table class="table">
+            <tr>
+              <th scope="col">Section Id</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Action</th>
+          </tr>
+          {% for record in sdata %}
+          <tr>
+            <td scope="row">{{ record.section_id }}</td>
+            <td>{{ record.name }}</td>
+            <td>{{ record.description }}</td>
+            <td>{{ record.publisher }}</td>
+            <td><a href="{{url_for("edit_book", book_id = record.section_id)}}"><i class="bi bi-pencil-square"></i></a></td>
+            <td><a href="{{url_for("dlt_book", book_id = record.section_id)}}"><i class="bi bi-trash-fill"></i></a></td>
+        </tr>
+            {% endfor %}
+</table>
+        {% else %}
+                <p>No record is found</p> 
+          {% endif %}
+          <p>Book Status</p>
+
+          
+        </div>
+       
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+       <h5>Members Section</h5> 
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        <div>
+          {% if lend %}
+          <p>Books requested by Member to lend</p>
+          <table class="table">
+            <tr>
+              <th scope="col">Issue ID</th>
+              <th scope="col">User ID</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Book ID</th>
+              <th scope="col">Book Name</th>           
+              <th scope="col">Click below to Approve</th>
+              <th scope="col">Click below to Reject</th>
+          </tr>
+          {% for record in lend %}
+          <tr>
+            <td scope="row">{{ record[1]}}</td>
+            <td>{{ record[2] }}</td>
+            <td>{{ record[3] }}</td>
+            <td>{{ record[4] }}</td>
+            <td>{{ record[5] }}</td>
+            <td><a href="{{url_for("approve_lend", issue_no = record[1])}}"><i class="bi bi-pencil-square"></i></a></td>
+            <td><a href="{{url_for("reject_lend", issue_no = record[1])}}"><i class="bi bi-trash-fill"></i></a></td>
+            <td></td>
+            
+        </tr>
+            {% endfor %}
+</table>
+        {% else %}
+                <p>No record is found</p> 
+          {% endif %}
+        </div>
+        <div>
+          <p>Books issued to the Members read and return basis</p>
+          {% if issuedbooks %}
+          
+          <table class="table">
+            <tr>
+              <th scope="col">Issue ID</th>
+              <th scope="col">User ID</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Book ID</th>
+              <th scope="col">Book Name</th>           
+              <th scope="col">Click below to Revoke</th>
+              
+          </tr>
+          {% for record in issuedbooks %}
+          <tr>
+            <td scope="row">{{ record[1]}}</td>
+            <td>{{ record[2] }}</td>
+            <td>{{ record[3] }}</td>
+            <td>{{ record[4] }}</td>
+            <td>{{ record[5] }}</td>
+            <td><a href="{{url_for("revoke", issue_no = record[1])}}"><i class="bi bi-pencil-square"></i></a></td>
+            
+            <td></td>
+            
+        </tr>
+            {% endfor %}
+</table>
+        {% else %}
+                <p>No record is found</p> 
+          {% endif %}
+        </div>  
+        <div>
+          <p>Members request to purchse Books</p>
+          {% if sales %}
+          
+          <table class="table">
+            <tr>
+              <th scope="col">Issue ID</th>
+              <th scope="col">User ID</th>
+              <th scope="col">User Name</th>
+              <th scope="col">Book ID</th>
+              <th scope="col">Book Name</th>           
+              <th scope="col">Click below to Sell</th>
+              <th scope="col">Click below to Reject</th>
+              
+          </tr>
+          {% for record in sales %}
+          <tr>
+            <td scope="row">{{ record[1]}}</td>
+            <td>{{ record[2] }}</td>
+            <td>{{ record[3] }}</td>
+            <td>{{ record[4] }}</td>
+            <td>{{ record[5] }}</td>
+            <td><a href="{{url_for("approve_sell", sales_no = record[1])}}"><i class="bi bi-pencil-square"></i></a></td>
+            <td><a href="{{url_for("reject_sell", sales_no = record[1])}}"><i class="bi bi-trash-fill"></i></a></td>
+            <td></td>
+            
+        </tr>
+            {% endfor %}
+</table>
+        {% else %}
+                <p>No record is found</p> 
+          {% endif %}
+        </div> 
+
+        
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+    
+
+    
+        
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>
